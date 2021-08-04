@@ -10,7 +10,7 @@ import time
 class TiSign(object):
     _canonical_uri = '/'
     _canonical_querystring = ''
-    _signed_headers = 'content-type;host'
+    _signed_headers = 'content-type;host;x-tc-timestamp'
     _request_payload = ''
     _algorithm = 'TC3-HMAC-SHA256'
     _secret_id = ''
@@ -48,8 +48,8 @@ class TiSign(object):
 
         # 1. 构造canonical_request 字符串
         # 1.1 拼接关键header信息，包括content-type和根域名host
-        canonical_headers = 'content-type:%s\nhost:%s\n' % (
-            self.content_type, self.host)
+        canonical_headers = 'content-type:%s\nhost:%s\nx-tc-timestamp:%s\n' % (
+            self.content_type, self.host, str(self.xtc_timestamp))
         # 1.2 对常量request_payload进行hash计算
         if sys.version_info[0] == 3 and isinstance(self._request_payload, type("")):
             self._request_payload = self._request_payload.encode("utf8")
@@ -96,7 +96,7 @@ class TiSign(object):
         authorization = "TC3-HMAC-SHA256"
         authorization += " Credential=%s/%s" % (
             self._secret_id, credential_scope)
-        authorization += ", SignedHeaders=content-type;host, Signature=%s" % signature
+        authorization += ", SignedHeaders=content-type;host;x-tc-timestamp, Signature=%s" % signature
         self._header["Authorization"] = authorization
         return self._header, authorization
 

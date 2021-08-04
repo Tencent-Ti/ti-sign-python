@@ -64,3 +64,6 @@ if __name__ == "__main__":
 cd example
 python/python3 main.py
 ```
+
+## 签名有效期
+**单个签名有效期为60分钟，签名超过60分钟使用会出现签名失败的错误**
